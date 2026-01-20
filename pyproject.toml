@@ -1,0 +1,103 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dbt-datahub-governance"
+version = "0.1.0"
+description = "A CLI tool that enforces data governance by validating dbt models against governance context stored in DataHub."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+authors = [
+    {name = "Karan Singh Chandel", email = "karan0207@gmail.com"}
+]
+keywords = ["dbt", "datahub", "governance", "data-governance", "lineage", "ownership"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "pydantic>=2.0.0",
+    "pyyaml>=6.0",
+    "datahub-rest>=0.12.0",
+    "datahub-emitter>=0.12.0",
+    "click>=8.0.0",
+    "rich>=12.0.0",
+    "requests>=2.28.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+    "pre-commit>=3.0.0",
+    "httpx>=0.24.0",
+]
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "httpx>=0.24.0",
+]
+
+[project.scripts]
+dbt-datahub-governance = "cli:main"
+dbt-governance = "cli:main"
+
+[project.urls]
+Homepage = "https://github.com/karan0207/dbt-datahub-governance"
+Repository = "https://github.com/karan0207/dbt-datahub-governance"
+Issues = "https://github.com/karan0207/dbt-datahub-governance/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+exclude = ["tests*", "blog*", "examples*"]
+
+[tool.black]
+line-length = 100
+target-version = ["py39", "py310", "py311", "py312"]
+include = "\\.pyi?$"
+
+[tool.isort]
+profile = "black"
+line_length = 100
+skip = [".venv", "venv"]
+
+[tool.flake8]
+max-line-length = 100
+exclude = [".venv", "venv", "build", "dist"]
+per-file-ignores = ["__init__.py: F401"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+check_untyped_defs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["tests/*", "src/__init__.py"]
+
+[tool.coverage.report]
+exclude_lines = ["pragma: no cover", "def __repr__", "raise NotImplementedError"]
