@@ -52,6 +52,8 @@ dbt-governance validate --manifest target/manifest.json --config governance.yml
 
 ## Usage
 
+For a complete list of commands and options, see the [Commands Reference](commands.md).
+
 ### Command Line Interface
 
 ```bash
@@ -63,13 +65,13 @@ dbt-governance [OPTIONS] COMMAND [ARGS]...
 - `validate`: Validate dbt models against governance rules
 - `report`: Generate governance compliance reports
 - `ingest`: Ingest dbt metadata into DataHub
+- `init`: Generate example governance configuration
 
 ### Options
 
-- `--manifest PATH`: Path to dbt manifest.json file
 - `--config PATH`: Path to governance configuration file
-- `--reporter FORMAT`: Output reporter format (console, json, markdown, github)
-- `--output PATH`: Output file path (for file-based reporters)
+- `--datahub-server URL`: DataHub server URL
+- `--datahub-token TOKEN`: DataHub access token
 
 ## Configuration
 
