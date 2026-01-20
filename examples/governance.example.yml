@@ -1,0 +1,109 @@
+# Example Governance Configuration
+
+This file provides example configurations for different use cases.
+
+## Basic Configuration
+
+```yaml
+rules:
+  - name: require_description
+    type: documentation
+    severity: warning
+    description: Ensure all models have descriptions
+    config:
+      required_description_length: 10
+
+  - name: require_ownership
+    type: ownership
+    severity: error
+    description: Ensure all models have owners
+    config:
+      required_ownership_types:
+        - DataOwner
+```
+
+## Full Configuration with All Options
+
+```yaml
+rules:
+  # Documentation rule
+  - name: require_description
+    type: documentation
+    severity: warning
+    enabled: true
+    description: Ensure all models have descriptions
+    config:
+      required_description_length: 10
+
+  # Ownership rule
+  - name: require_ownership
+    type: ownership
+    severity: error
+    enabled: true
+    description: Ensure all models have proper ownership
+    config:
+      required_ownership_types:
+        - DataOwner
+        - TechnicalOwner
+
+  # Tag rules
+  - name: require_pii_tag
+    type: tag
+    severity: error
+    enabled: true
+    description: Critical models must have PII tag
+    config:
+      required_tags:
+        - pii
+
+  - name: forbid_test_tags
+    type: tag
+    severity: error
+    enabled: true
+    description: Production models should not have test tags
+    config:
+      forbidden_tags:
+        - test
+        - wip
+
+  # Column rules
+  - name: require_column_descriptions
+    type: column
+    severity: info
+    enabled: true
+    description: All columns should have descriptions
+    config:
+      column_descriptions_required: true
+
+  - name: require_audit_columns
+    type: column
+    severity: error
+    enabled: true
+    description: Critical models must have audit columns
+    config:
+      required_columns:
+        - created_at
+        - updated_at
+
+  # Test coverage rule
+  - name: require_tests
+    type: test
+    severity: warning
+    enabled: true
+    description: Models should have at least one test
+    config:
+      test_coverage_min: 1
+
+# Model filtering
+excluded_models:
+  - stg__tmp_*
+  - int_tmp_*
+
+included_models: []
+
+# DataHub configuration
+datahub:
+  server: "https://your-datahub-instance.com"
+  token: "your-datahub-access-token"
+  timeout: 30
+```
