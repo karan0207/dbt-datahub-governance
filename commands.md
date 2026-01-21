@@ -1,272 +1,133 @@
-# CLI Commands Reference
+# Commands
 
-Complete reference for all `dbt-governance` CLI commands.
-
-> **Note:** Both `dbt-governance` and `dbt-datahub-governance` commands are available and work identically.
-
----
-
-## Table of Contents
-
-- [Global Options](#global-options)
-- [Commands](#commands)
-  - [validate](#validate)
-  - [report](#report)
-  - [ingest](#ingest)
-  - [init](#init)
-- [Environment Variables](#environment-variables)
-- [Exit Codes](#exit-codes)
-- [Reporter Formats](#reporter-formats)
-- [Example Workflow](#example-workflow)
-
----
+Reference for the `dbt-governance` CLI. You can also use `dbt-datahub-governance` - both work the same.
 
 ## Global Options
 
-| Option | Environment Variable | Description |
-|--------|---------------------|-------------|
-| `--config PATH` | - | Path to governance configuration file |
-| `--datahub-server URL` | `DATAHUB_SERVER` | DataHub server URL |
-| `--datahub-token TOKEN` | `DATAHUB_TOKEN` | DataHub access token |
-| `--version` | - | Show version information |
-| `--help` | - | Show help message |
-
----
-
-## Commands
-
-### validate
-
-Validate dbt models against governance rules defined in the configuration file.
-
-**Syntax:**
-
-```bash
-dbt-governance validate MANIFEST_PATH [OPTIONS]
+```
+--config PATH         Path to governance config file
+--datahub-server URL  DataHub server URL (or set DATAHUB_SERVER env var)
+--datahub-token TOKEN DataHub access token (or set DATAHUB_TOKEN env var)
+--version             Show version
+--help                Show help
 ```
 
-**Arguments:**
+## validate
 
-| Argument | Required | Description |
-|----------|----------|-------------|
-| `MANIFEST_PATH` | Yes | Path to dbt manifest.json file |
-
-**Options:**
-
-| Option | Short | Default | Description |
-|--------|-------|---------|-------------|
-| `--config PATH` | `-c` | - | Path to governance configuration file |
-| `--reporter FORMAT` | `-r` | `console` | Output format: `console`, `json`, `markdown`, `github` |
-| `--output PATH` | `-o` | - | Output file path (for file-based reporters) |
-| `--fail-on LEVEL` | - | `error` | Exit with error code on: `error`, `warning`, `never` |
-
-**Examples:**
+Validates dbt models against your governance rules.
 
 ```bash
-# Basic validation with default settings
+dbt-governance validate <manifest-path> [options]
+```
+
+Options:
+- `-c, --config PATH` - Config file path
+- `-r, --reporter FORMAT` - Output format: `console` (default), `json`, `markdown`, `github`
+- `-o, --output PATH` - Write output to file
+- `--fail-on LEVEL` - When to exit with error: `error` (default), `warning`, `never`
+
+Examples:
+
+```bash
+# Simple validation
 dbt-governance validate target/manifest.json
 
-# Validate with custom config and JSON output
+# With config and JSON output
 dbt-governance validate target/manifest.json -c governance.yml -r json -o report.json
 
-# Validate and fail on warnings
+# Fail on warnings (stricter)
 dbt-governance validate target/manifest.json --fail-on warning
 
-# Validate with DataHub integration
+# With DataHub
 dbt-governance validate target/manifest.json \
   --config governance.yml \
   --datahub-server https://datahub.company.com \
   --datahub-token $DATAHUB_TOKEN
 ```
 
----
+## report
 
-### report
-
-Generate a governance compliance report without failing.
-
-**Syntax:**
+Generates a compliance report (doesn't fail the build).
 
 ```bash
-dbt-governance report MANIFEST_PATH [OPTIONS]
+dbt-governance report <manifest-path> [options]
 ```
 
-**Arguments:**
-
-| Argument | Required | Description |
-|----------|----------|-------------|
-| `MANIFEST_PATH` | Yes | Path to dbt manifest.json file |
-
-**Options:**
-
-| Option | Short | Default | Description |
-|--------|-------|---------|-------------|
-| `--output PATH` | `-o` | - | Output file path for the report |
-| `--format FORMAT` | `-f` | `markdown` | Report format: `json`, `markdown` |
-
-**Examples:**
+Options:
+- `-o, --output PATH` - Output file
+- `-f, --format FORMAT` - `markdown` (default) or `json`
 
 ```bash
-# Generate Markdown report
 dbt-governance report target/manifest.json -o governance_report.md
-
-# Generate JSON report
 dbt-governance report target/manifest.json -f json -o report.json
 ```
 
----
+## ingest
 
-### ingest
-
-Ingest dbt model metadata into DataHub.
-
-**Syntax:**
+Pushes dbt metadata into DataHub.
 
 ```bash
-dbt-governance ingest MANIFEST_PATH [OPTIONS]
+dbt-governance ingest <manifest-path> [options]
 ```
 
-**Arguments:**
+Options:
+- `--platform NAME` - Platform name: `dbt` (default), `snowflake`, `bigquery`, etc.
 
-| Argument | Required | Description |
-|----------|----------|-------------|
-| `MANIFEST_PATH` | Yes | Path to dbt manifest.json file |
-
-**Options:**
-
-| Option | Default | Description |
-|--------|---------|-------------|
-| `--platform NAME` | `dbt` | Data platform for DataHub assets (e.g., `dbt`, `snowflake`, `bigquery`) |
-
-**Prerequisites:**
-
-- DataHub server URL must be set via `--datahub-server` or `DATAHUB_SERVER` environment variable
-- DataHub access token must be set via `--datahub-token` or `DATAHUB_TOKEN` environment variable
-
-**Examples:**
+Requires `DATAHUB_SERVER` and `DATAHUB_TOKEN` to be set (via env vars or flags).
 
 ```bash
-# Ingest models into DataHub
 dbt-governance ingest target/manifest.json \
   --datahub-server https://datahub.company.com \
   --datahub-token $DATAHUB_TOKEN
 
-# Ingest with custom platform
-dbt-governance ingest target/manifest.json \
-  --platform snowflake \
-  --datahub-server https://datahub.company.com \
-  --datahub-token $DATAHUB_TOKEN
+# With custom platform
+dbt-governance ingest target/manifest.json --platform snowflake
 ```
 
----
+## init
 
-### init
-
-Generate an example governance configuration file.
-
-**Syntax:**
+Creates a starter governance config file.
 
 ```bash
-dbt-governance init OUTPUT_PATH [OPTIONS]
+dbt-governance init <output-path> [--example basic|full]
 ```
 
-**Arguments:**
-
-| Argument | Required | Description |
-|----------|----------|-------------|
-| `OUTPUT_PATH` | Yes | Path where the configuration file will be created |
-
-**Options:**
-
-| Option | Default | Description |
-|--------|---------|-------------|
-| `--example TYPE` | `basic` | Type of example: `basic` or `full` |
-
-**Examples:**
-
 ```bash
-# Generate basic example
 dbt-governance init governance.yml
-
-# Generate full example with all options
 dbt-governance init governance.yml --example full
 ```
-
----
-
-## Environment Variables
-
-Use environment variables instead of command-line options for sensitive information:
-
-| Variable | Description |
-|----------|-------------|
-| `DATAHUB_SERVER` | DataHub server URL |
-| `DATAHUB_TOKEN` | DataHub access token |
-
-**Example:**
-
-```bash
-export DATAHUB_SERVER="https://datahub.company.com"
-export DATAHUB_TOKEN="your-access-token"
-
-dbt-governance validate target/manifest.json
-```
-
----
 
 ## Exit Codes
 
-| Code | Description |
-|------|-------------|
-| `0` | Success - no violations (or violations below `--fail-on` threshold) |
-| `1` | Validation failed - violations met or exceeded `--fail-on` threshold |
-| `2` | Configuration or runtime error |
-
----
+- `0` - Success (or violations below your `--fail-on` threshold)
+- `1` - Validation failed
+- `2` - Config or runtime error
 
 ## Reporter Formats
 
-| Format | Description | Use Case |
-|--------|-------------|----------|
-| `console` | Human-readable output with colors | Terminal usage, debugging |
-| `json` | Machine-readable JSON output | CI/CD pipelines, programmatic processing |
-| `markdown` | Markdown formatted report | Documentation, wiki pages |
-| `github` | GitHub-flavored Markdown with collapsible sections | Pull request comments |
+- `console` - Pretty terminal output with colors
+- `json` - For CI/CD and scripts
+- `markdown` - For docs
+- `github` - For PR comments (collapsible sections)
 
----
-
-## Example Workflow
-
-A typical governance workflow:
+## Typical Workflow
 
 ```bash
-# 1. Initialize a governance configuration
-dbt-governance init governance.yml --example full
+# Create a config
+dbt-governance init governance.yml
 
-# 2. Validate your dbt models
+# Run validation
 dbt-governance validate target/manifest.json -c governance.yml
 
-# 3. Generate a report for documentation
-dbt-governance report target/manifest.json -o governance_report.md
+# Generate a report
+dbt-governance report target/manifest.json -o report.md
 
-# 4. Ingest metadata into DataHub
-dbt-governance ingest target/manifest.json \
-  --datahub-server https://datahub.company.com \
-  --datahub-token $DATAHUB_TOKEN
+# Push to DataHub
+dbt-governance ingest target/manifest.json
 ```
 
-### CI/CD Integration
+For CI, you probably want:
 
 ```bash
-# In your CI pipeline - fail on any error
-dbt-governance validate target/manifest.json \
-  -c governance.yml \
-  -r json \
-  -o results.json \
-  --fail-on error
-
-# Or be stricter - fail on warnings too
-dbt-governance validate target/manifest.json \
-  -c governance.yml \
-  --fail-on warning
+dbt-governance validate target/manifest.json -c governance.yml -r json -o results.json --fail-on error
 ```
