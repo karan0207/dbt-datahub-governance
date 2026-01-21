@@ -1,25 +1,45 @@
 # dbt-datahub-governance
 
-A CLI tool that enforces data governance by validating dbt models against governance context stored in DataHub. It brings ownership, lineage awareness, and policy enforcement directly into the dbt workflow.
+> A CLI tool that enforces data governance by validating dbt models against governance context stored in DataHub. It brings ownership, lineage awareness, and policy enforcement directly into the dbt workflow.
+
+[![Python](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+---
 
 ## Features
 
-- **Governance Validation**: Validate dbt models against governance policies defined in DataHub
-- **Ownership Enforcement**: Ensure all models have proper ownership assigned
-- **Lineage Awareness**: Validate model relationships and dependencies
-- **Policy Enforcement**: Check models against organizational data governance policies
-- **Multiple Reporters**: Console, JSON, Markdown, and GitHub comment reporter formats
-- **CI/CD Integration**: Seamlessly integrate into your CI/CD pipelines
+| Feature | Description |
+|---------|-------------|
+| **Governance Validation** | Validate dbt models against governance policies defined in DataHub |
+| **Ownership Enforcement** | Ensure all models have proper ownership assigned |
+| **Lineage Awareness** | Validate model relationships and dependencies |
+| **Policy Enforcement** | Check models against organizational data governance policies |
+| **Multiple Reporters** | Console, JSON, Markdown, and GitHub comment reporter formats |
+| **CI/CD Integration** | Seamlessly integrate into your CI/CD pipelines |
+
+---
 
 ## Installation
 
+**1. Clone the repository:**
+
 ```bash
-pip install dbt-datahub-governance
+git clone https://github.com/karan0207/dbt-datahub-governance.git
+cd dbt-datahub-governance
 ```
+
+**2. Install in development mode:**
+
+```bash
+pip install -e ".[dev]"
+```
+
+---
 
 ## Quick Start
 
-1. Configure your DataHub connection in `governance.yml`:
+**Step 1:** Configure your DataHub connection in `governance.yml`:
 
 ```yaml
 datahub:
@@ -27,7 +47,7 @@ datahub:
   token: your-gms-token
 ```
 
-2. Create a governance configuration file:
+**Step 2:** Create a governance configuration file:
 
 ```yaml
 rules:
@@ -44,15 +64,17 @@ rules:
     severity: warning
 ```
 
-3. Run governance checks:
+**Step 3:** Run governance checks:
 
 ```bash
 dbt-governance validate --manifest target/manifest.json --config governance.yml
 ```
 
+---
+
 ## Usage
 
-For a complete list of commands and options, see the [Commands Reference](commands.md).
+> For a complete list of commands and options, see the [Commands Reference](commands.md).
 
 ### Command Line Interface
 
@@ -62,16 +84,22 @@ dbt-governance [OPTIONS] COMMAND [ARGS]...
 
 ### Available Commands
 
-- `validate`: Validate dbt models against governance rules
-- `report`: Generate governance compliance reports
-- `ingest`: Ingest dbt metadata into DataHub
-- `init`: Generate example governance configuration
+| Command | Description |
+|---------|-------------|
+| `validate` | Validate dbt models against governance rules |
+| `report` | Generate governance compliance reports |
+| `ingest` | Ingest dbt metadata into DataHub |
+| `init` | Generate example governance configuration |
 
 ### Options
 
-- `--config PATH`: Path to governance configuration file
-- `--datahub-server URL`: DataHub server URL
-- `--datahub-token TOKEN`: DataHub access token
+| Option | Description |
+|--------|-------------|
+| `--config PATH` | Path to governance configuration file |
+| `--datahub-server URL` | DataHub server URL |
+| `--datahub-token TOKEN` | DataHub access token |
+
+---
 
 ## Configuration
 
@@ -98,6 +126,8 @@ datahub:
   token: your-access-token
   timeout: 30
 ```
+
+---
 
 ## Reporters
 
@@ -128,28 +158,11 @@ Machine-readable JSON output:
 
 ### Markdown Reporter
 
-Markdown formatted report for documentation:
+Markdown formatted report for documentation.
 
-### GitHub Comment Reporter
-
-Comment format for PRs:
-
-```
-## Governance Check Results
-
-| Model | Status | Violations |
-|-------|--------|------------|
-```
+---
 
 ## Development
-
-### Setup
-
-```bash
-git clone https://github.com/karan0207/dbt-datahub-governance.git
-cd dbt-datahub-governance
-pip install -e ".[dev]"
-```
 
 ### Testing
 
@@ -166,10 +179,14 @@ flake8 src/ tests/
 mypy src/
 ```
 
+---
+
 ## Contributing
 
 Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details.
 
+---
+
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
+MIT License 
