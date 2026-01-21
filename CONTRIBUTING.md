@@ -17,7 +17,7 @@ Thank you for your interest in contributing! This document provides guidelines a
 2. Clone your fork locally:
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/dbt-datahub-governance.git
+git clone https://github.com/karan0207/dbt-datahub-governance.git
 cd dbt-datahub-governance
 ```
 
